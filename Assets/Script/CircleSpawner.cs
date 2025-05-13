@@ -74,7 +74,7 @@ public class CircleSpawner : MonoBehaviour
         Rigidbody2D[] rbs = newCircle.GetComponentsInChildren<Rigidbody2D>();
         foreach (var rb in rbs)
         {
-            rb.gravityScale = isUpperScreen(touchPos) ? 1f : -1f;
+            rb.gravityScale = isUpperScreen(touchPos) ? 0.1f : -0.1f;
         }
     }
 }
