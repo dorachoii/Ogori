@@ -14,33 +14,68 @@ public class CircleSpawner : MonoBehaviour
     {
         screenHeight = Screen.height;
         screenWidth = Screen.width;
-        radius = circle.transform.localScale.x;
+        radius = circle.transform.localScale.x / 2f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
-            Vector2 screenPos = Input.mousePosition;
-            Vector2 worldPos = Camera.main.ScreenToWorldPoint(new Vector2(screenPos.x, screenPos.y));
+            Vector2 touchInputPos = Input.mousePosition;
+            Vector2 touchWorldPos = Camera.main.ScreenToWorldPoint(new Vector2(touchInputPos.x, touchInputPos.y));
 
-            
-            GameObject newCircle = Instantiate(circle, worldPos, Quaternion.identity);
-            Rigidbody2D[] rbs = newCircle.GetComponentsInChildren<Rigidbody2D>();
-
-            foreach (var rb in rbs)
+            if (IsSafeScreen(touchInputPos))
             {
-                rb.gravityScale = isUpperSide(screenPos) ? 1f : -1f;
-            }
+                Collider2D[] hits = Physics2D.OverlapCircleAll(touchWorldPos, radius);
 
+                if (hits.Length == 0)
+                {
+                    SpawnCircle(touchWorldPos, touchInputPos);
+                }
+                else
+                {
+                    Vector2 offset = Vector2.zero;
+
+                    foreach (var hit in hits)
+                    {
+                        Vector2 dir = (touchWorldPos - (Vector2)hit.transform.position).normalized;
+                        offset += dir * radius;
+                    }
+
+                    Vector2 newPos = touchWorldPos + offset;
+
+                    Collider2D[] recheck = Physics2D.OverlapCircleAll(newPos, radius);
+                    if (recheck.Length == 0)
+                    {
+                        SpawnCircle(newPos, touchInputPos);
+                    }
+                }
+            }
         }
     }
 
-    bool isUpperSide(Vector2 touchPos)
+    bool isUpperScreen(Vector2 touchInputPos)
     {
-        print($"touchPos: {touchPos.y} screenHeight: {screenHeight/2}");
-        return touchPos.y >= screenHeight/2 ? true : false;
+        return touchInputPos.y >= screenHeight / 2;
+    }
+
+    bool IsSafeScreen(Vector2 touchPos)
+    {
+        float center = screenHeight / 2f;
+        float margin = 20f;
+
+        return touchPos.y >= center + margin || touchPos.y <= center - margin;
+    }
+
+    void SpawnCircle(Vector2 pos, Vector2 touchPos)
+    {
+        GameObject newCircle = Instantiate(circle, pos, Quaternion.identity);
+        Rigidbody2D[] rbs = newCircle.GetComponentsInChildren<Rigidbody2D>();
+        foreach (var rb in rbs)
+        {
+            rb.gravityScale = isUpperScreen(touchPos) ? 1f : -1f;
+        }
     }
 }
 
