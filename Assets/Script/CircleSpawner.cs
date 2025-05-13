@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -5,10 +6,15 @@ public class CircleSpawner : MonoBehaviour
 {
     public GameObject circle;
 
+    int screenHeight, screenWidth;
+    float radius;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        screenHeight = Screen.height;
+        screenWidth = Screen.width;
+        radius = circle.transform.localScale.x;
     }
 
     // Update is called once per frame
@@ -18,25 +24,23 @@ public class CircleSpawner : MonoBehaviour
         {
             Vector2 screenPos = Input.mousePosition;
             Vector2 worldPos = Camera.main.ScreenToWorldPoint(new Vector2(screenPos.x, screenPos.y));
+
             
-            float radius = circle.transform.localScale.x;
+            GameObject newCircle = Instantiate(circle, worldPos, Quaternion.identity);
+            Rigidbody2D[] rbs = newCircle.GetComponentsInChildren<Rigidbody2D>();
 
-            Collider2D[] hits = Physics2D.OverlapCircleAll(worldPos, radius);
-
-            if(hits.Length == 0){
-                Instantiate(circle, worldPos, Quaternion.identity);
-            }else{
-                Vector2 totalOffset = Vector2.zero;
-                foreach (var hit in hits)
-                {
-                    Vector2 dir = (worldPos - (Vector2)hit.transform.position).normalized;
-                    float minDistance = radius * 2f;
-                    totalOffset += dir * minDistance;
-                }
-                Vector2 newPos = worldPos + totalOffset / hits.Length;
+            foreach (var rb in rbs)
+            {
+                rb.gravityScale = isUpperSide(screenPos) ? 1f : -1f;
             }
+
         }
     }
-}
 
+    bool isUpperSide(Vector2 touchPos)
+    {
+        print($"touchPos: {touchPos.y} screenHeight: {screenHeight/2}");
+        return touchPos.y >= screenHeight/2 ? true : false;
+    }
+}
 
