@@ -5,15 +5,13 @@ using UnityEngine.InputSystem;
 public class CircleSpawner : MonoBehaviour
 {
     public GameObject circle;
+    public GameObject bar;
 
-    int screenHeight, screenWidth;
     float radius;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        screenHeight = Screen.height;
-        screenWidth = Screen.width;
         radius = circle.transform.localScale.x / 2f;
     }
 
@@ -57,12 +55,14 @@ public class CircleSpawner : MonoBehaviour
 
     bool isUpperScreen(Vector2 touchInputPos)
     {
-        return touchInputPos.y >= screenHeight / 2;
+        Vector2 barScreenPos = Camera.main.WorldToScreenPoint(bar.transform.position);
+        return touchInputPos.y >= barScreenPos.y;
     }
 
     bool IsSafeScreen(Vector2 touchPos)
     {
-        float center = screenHeight / 2f;
+        Vector2 barScreenPos = Camera.main.WorldToScreenPoint(bar.transform.position);
+        float center = barScreenPos.y;
         float margin = 20f;
 
         return touchPos.y >= center + margin || touchPos.y <= center - margin;
@@ -74,7 +74,7 @@ public class CircleSpawner : MonoBehaviour
         Rigidbody2D[] rbs = newCircle.GetComponentsInChildren<Rigidbody2D>();
         foreach (var rb in rbs)
         {
-            rb.gravityScale = isUpperScreen(touchPos) ? 0.1f : -0.1f;
+            rb.gravityScale = isUpperScreen(touchPos) ? 0.2f : -0.2f;
         }
     }
 }
