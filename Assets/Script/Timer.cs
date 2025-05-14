@@ -17,6 +17,9 @@ public class Timer : MonoBehaviour
     {
         if (!isRunning) return;
 
+        if(isRunning){
+            
+        }
         currentTime -= Time.deltaTime;
 
         if (currentTime <= 0f)
@@ -26,15 +29,10 @@ public class Timer : MonoBehaviour
 
             Debug.Log("⏰ Time Over!");
 
-            BubbleJudge.Instance.CheckBarPos();
+            GameManager.Instance.EndGame(GameManager.Player.None);
         }
 
         text.text = Mathf.CeilToInt(currentTime).ToString(); 
-    }
-
-    public bool IsTimeUp()
-    {
-        return !isRunning;
     }
 
     public void ResetTimer()

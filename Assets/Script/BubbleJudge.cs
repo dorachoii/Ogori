@@ -26,20 +26,37 @@ public class BubbleJudge : MonoBehaviour
         bar = GameObject.FindGameObjectWithTag("Bar");
     }
 
+    void Update()
+    {
+        if(GameManager.Instance.CurrentState == GameManager.GameState.Running){
+            CheckEndByBar();
+        }
+    }
+
+    void CheckEndByBar()
+    {
+        Vector2 barScreenPos = Camera.main.WorldToScreenPoint(bar.transform.position);
+        
+        if (barScreenPos.y <= 0)
+        {
+            GameManager.Instance.EndGame(GameManager.Player.Player1);
+
+        }
+        else if (barScreenPos.y >= Screen.height)
+        {
+            GameManager.Instance.EndGame(GameManager.Player.Player2);
+        }
+    }
+
     public void CheckBarPos()
     {
         Vector2 barScreenPos = Camera.main.WorldToScreenPoint(bar.transform.position);
         if(barScreenPos.y > ScreenHeight/2){
-            Debug.Log("Down Player win!");
+             GameManager.Instance.EndGame(GameManager.Player.Player2);
         }else
         {
-            Debug.Log("Up Player win!");
+            GameManager.Instance.EndGame(GameManager.Player.Player1);
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

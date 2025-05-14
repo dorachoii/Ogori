@@ -18,6 +18,7 @@ public class CircleSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //FIX : touch로 바꾸기
         if (Input.GetMouseButtonDown(0))
         {
             Vector2 touchInputPos = Input.mousePosition;
@@ -35,6 +36,7 @@ public class CircleSpawner : MonoBehaviour
                 {
                     Vector2 offset = Vector2.zero;
 
+                    // FIX: 벡터의 덧셈
                     foreach (var hit in hits)
                     {
                         Vector2 dir = (touchWorldPos - (Vector2)hit.transform.position).normalized;
