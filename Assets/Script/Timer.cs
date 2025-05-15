@@ -21,7 +21,6 @@ public class Timer : MonoBehaviour
         if (currentTime <= 0f)
         {
             currentTime = 0f;
-            GameManager.Instance.CurrentState = GameManager.GameState.End;
             BubbleJudge.Instance.CheckBarPos();
         }
 

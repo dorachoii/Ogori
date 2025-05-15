@@ -58,16 +58,16 @@ public class CircleSpawner : MonoBehaviour
     bool isUpperScreen(Vector2 touchInputPos)
     {
         Vector2 barScreenPos = Camera.main.WorldToScreenPoint(bar.transform.position);
-        return touchInputPos.y >= barScreenPos.y;
+        return touchInputPos.x >= barScreenPos.x;
     }
 
     bool IsSafeScreen(Vector2 touchPos)
     {
         Vector2 barScreenPos = Camera.main.WorldToScreenPoint(bar.transform.position);
-        float center = barScreenPos.y;
+        float center = barScreenPos.x;
         float margin = 20f;
 
-        return touchPos.y >= center + margin || touchPos.y <= center - margin;
+        return touchPos.x >= center + margin || touchPos.x <= center - margin;
     }
 
     void SpawnCircle(Vector2 pos, Vector2 touchPos)

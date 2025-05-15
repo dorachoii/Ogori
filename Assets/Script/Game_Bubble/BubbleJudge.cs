@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class BubbleJudge : MonoBehaviour
 {
-    int ScreenHeight;
     public static BubbleJudge Instance { get; private set; }
     GameObject bar;
 
@@ -22,7 +21,6 @@ public class BubbleJudge : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        ScreenHeight = Screen.height;
         bar = GameObject.FindGameObjectWithTag("Bar");
     }
 
@@ -38,9 +36,9 @@ public class BubbleJudge : MonoBehaviour
     {
         Vector2 barScreenPos = Camera.main.WorldToScreenPoint(bar.transform.position);
 
-        if (barScreenPos.y <= 0 || barScreenPos.y >= Screen.height)
+        if (barScreenPos.x <= 0 || barScreenPos.x >= Screen.width)
         {
-            var winner = (barScreenPos.y <= 0)
+            var winner = (barScreenPos.x <= 0)
                 ? GameManager.Player.Player1
                 : GameManager.Player.Player2;
 
@@ -51,7 +49,9 @@ public class BubbleJudge : MonoBehaviour
     public void CheckBarPos()
     {
         Vector2 barScreenPos = Camera.main.WorldToScreenPoint(bar.transform.position);
-        GameManager.Player winner = (barScreenPos.y > Screen.height / 2)
+        print($"{barScreenPos.x} screen: {Screen.width / 2} currentState {GameManager.Instance.CurrentState}");
+
+        GameManager.Player winner = (barScreenPos.x > Screen.width / 2)
             ? GameManager.Player.Player2
             : GameManager.Player.Player1;
 
