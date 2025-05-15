@@ -4,32 +4,25 @@ using UnityEngine;
 public class Timer : MonoBehaviour
 {
     public TextMeshProUGUI text;
-    public float startTime = 10f; 
+    public float duration = 10f; 
     private float currentTime;
-    private bool isRunning = true;
 
     void Start()
     {
-        currentTime = startTime;
+        ResetTimer();
     }
 
     void Update()
     {
-        if (!isRunning) return;
+        if ( GameManager.Instance.CurrentState != GameManager.GameState.Running) return;
 
-        if(isRunning){
-            
-        }
         currentTime -= Time.deltaTime;
 
         if (currentTime <= 0f)
         {
             currentTime = 0f;
-            isRunning = false;
-
-            Debug.Log("⏰ Time Over!");
-
-            GameManager.Instance.EndGame(GameManager.Player.None);
+            GameManager.Instance.CurrentState = GameManager.GameState.End;
+            BubbleJudge.Instance.CheckBarPos();
         }
 
         text.text = Mathf.CeilToInt(currentTime).ToString(); 
@@ -37,7 +30,12 @@ public class Timer : MonoBehaviour
 
     public void ResetTimer()
     {
-        currentTime = startTime;
-        isRunning = true;
+        currentTime = duration;
+        GameManager.Instance.CurrentState = GameManager.GameState.Running;
+    }
+
+    public void PauseTimer()
+    {
+        GameManager.Instance.CurrentState = GameManager.GameState.Pause;
     }
 }

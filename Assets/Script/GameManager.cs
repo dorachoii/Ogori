@@ -3,12 +3,12 @@ using UnityEngine.InputSystem.XR.Haptics;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance {get; private set;}
-    public  GameState CurrentState;
+    public static GameManager Instance { get; private set; }
+    public GameState CurrentState;
 
     void Awake()
     {
-        if(Instance == null) Instance = this;
+        if (Instance == null) Instance = this;
         else
         {
             Destroy(gameObject);
@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     {
         Player1,
         Player2,
-        None 
+        Unknown
     }
 
     public enum MiniGameType
@@ -37,18 +37,14 @@ public class GameManager : MonoBehaviour
         End
     }
 
+    // GameManager.cs
     public void EndGame(Player winner)
     {
+        if (CurrentState == GameState.End) return;
 
-    CurrentState = GameState.End;
+        CurrentState = GameState.End;
 
-    if (winner == Player.None)
-    {
-        // 시간이 다 되었을 때 판정 위임
-
-            BubbleJudge.Instance.CheckBarPos();
+        Debug.Log($"게임 종료! 승자는: {winner}");
     }
 
-    Debug.Log($"게임 종료! 승자는: {winner}");
-    }
 }

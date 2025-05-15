@@ -590,6 +590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 322d10b1a2d95cc48b486fe80b47981e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentState: 0
 --- !u!1 &908020062
 GameObject:
   m_ObjectHideFlags: 0
@@ -967,7 +968,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 1296408638}
-  startTime: 10
+  duration: 10
 --- !u!1 &1874303099
 GameObject:
   m_ObjectHideFlags: 0
